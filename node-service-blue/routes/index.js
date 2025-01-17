@@ -3,7 +3,8 @@ const express = require("express");
 const router = express.Router();
 const { MongoClient } = require("mongodb");
 
-const uri = "mongodb://localhost";
+const mongoHost = process.env.MONGO_URL || "localhost:27017";
+const uri = `mongodb://${mongoHost}`;
 const client = new MongoClient(uri);
 
 // Fibonacci function to simulate delay

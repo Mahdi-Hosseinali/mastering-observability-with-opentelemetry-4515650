@@ -1,12 +1,13 @@
-from flask import Flask, request, jsonify
+import os
 
+from flask import Flask, request, jsonify
 from pymongo import MongoClient
 
 app = Flask(__name__)
 
 # MongoDB setup
-uri = "mongodb://localhost"
-client = MongoClient(uri)
+mongo_host = os.getenv("MONGO_URL", "localhost:27017")
+client = MongoClient(f"mongodb://{mongo_host}")
 db = client['voting']
 votes = db['votes']
 

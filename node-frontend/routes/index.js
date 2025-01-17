@@ -20,8 +20,10 @@ module.exports = () => {
         return res.status(400).end();
       }
 
+      const GATEWAY_URL = process.env.GATEWAY_URL || 'http://127.0.0.1:3001';
+      console.log(`BACKEND_URL: ${GATEWAY_URL}`);
       const { data } = await axios.get(
-        `http://127.0.0.1:3001?choice=${req.query.choice}`
+        `${GATEWAY_URL}?choice=${req.query.choice}`
       );
       return res.render("index", data);
     } catch (err) {

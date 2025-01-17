@@ -1,15 +1,19 @@
 from flask import Flask, request, jsonify
 import requests
+import os
 
 app = Flask(__name__)
 
 toggle = 0
 
+blue_url = os.getenv('SERVICE_BLUE', 'http://localhost:3020')
+green_url = os.getenv('SERVICE_GREEN', 'http://localhost:3010')
+
 @app.route('/')
 def index():
     global toggle
     choice = request.args.get('choice', '')
-    url = f"http://localhost:{'3010' if toggle < 3 else '3020'}?choice={choice}"
+    url = f"{green_url if toggle < 3 else blue_url}?choice={choice}"
 
     try:
         response = requests.get(url)

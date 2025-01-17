@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./node-frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./node-frontend:/app
+    ports:
+      - "8080:8080"
+    environment:
+      - GATEWAY_URL=http://gateway:3001
+    depends_on:
+      - gateway
+
+  service-blue:
+    build:
+      context: ./node-service-blue
+      dockerfile: Dockerfile
+    volumes:
+      - ./node-service-blue:/app
+    ports:
+      - "3020:3020"
+    environment:
+      - MONGO_URL=mongodb:27017
+    depends_on:
+      - mongodb
+
+  gateway:
+    build:
+      context: ./python-service-gateway
+      dockerfile: Dockerfile
+    volumes:
+      - ./python-service-gateway:/app
+    ports:
+      - "3001:3001"
+    environment:
+      - SERVICE_BLUE=http://service-blue:3020
+      - SERVICE_GREEN=http://service-green:3010
+    depends_on:
+      - service-green
+      - service-blue
+
+  service-green:
+    build:
+      context: ./python-service-green
+      dockerfile: Dockerfile
+    volumes:
+      - ./python-service-green:/app
+    ports:
+      - "3010:3010"
+    environment:
+      - MONGO_URL=mongodb:27017
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
