@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
   frontend:
@@ -7,6 +6,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./node-frontend:/app
+      - ./_opentelemetry-js:/app/_opentelemetry-js
     ports:
       - "8080:8080"
     environment:
@@ -20,6 +20,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./node-service-blue:/app
+      - ./_opentelemetry-js:/app/_opentelemetry-js
     ports:
       - "3020:3020"
     environment:
